@@ -1,34 +1,34 @@
  <template lang="">
   <div>
     <search  @sendKeyword="getKeyword"/>
-    <ListProduct :dataProducts="dataProducts"  @getListProducts="getData"/>
+    <ListOrder :dataOrders="dataOrders"  @getListOrders="getData"/>
   </div>
 </template>
 <script>
 import { URL_API } from "@/constant/constant";
 import axios from "axios";
 import Search from "@/components/common/Search";
-import ListProduct from "~/components/product/ListProduct";
+import ListOrder from "~/components/order/ListOrder";
 export default {
   components: {
-    ListProduct,
+    ListOrder,
     Search,
   },
   data() {
     return {
-      dataProducts: [],
+      dataOrders: [],
       search: "",
     };
   },
   methods: {
     /**
-     * get list product
+     * get list order
      */
     getData() {
-      axios.get(URL_API + "product").then((res) => {
-        this.dataProducts = res.data.data;
+      axios.get(URL_API + "order").then((res) => {
+        this.dataOrders = res.data.data;
         // this.page = res.data
-        console.log(this.dataProducts);
+        console.log(this.dataOrders);
       });
     },
 
@@ -37,7 +37,7 @@ export default {
      */
     getKeyword(value) {
       this.search = value;
-      axios.get(URL_API + "product?name=" + this.search).then((res) => {
+      axios.get(URL_API + "order?name=" + this.search).then((res) => {
         this.dataProducts = res.data;
         console.log(res.data);
         // this.page = res.data;

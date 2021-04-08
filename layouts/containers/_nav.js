@@ -22,7 +22,7 @@ export default [{
         {
             _name: 'CSidebarNavItem',
             name: 'Order',
-            to: '/roles',
+            to: '/order',
             icon: 'cil-pencil'
         },
 

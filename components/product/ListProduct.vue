@@ -6,7 +6,7 @@
       </CCardHeader>
       <CCardBody>
         <CButton color="primary" class="m-2 btn_add">
-          <nuxt-link to="/project/add" class="text-white d-block">
+          <nuxt-link to="/product/add" class="text-white d-block">
             + Add</nuxt-link
           >
         </CButton>
@@ -24,10 +24,9 @@
               <!-- {{ item.thumb }} -->
               <!-- <img :src="require(`@/assets/img/logo.png`)" alt=""> -->
               <img
-                width="1%"
-                height="1%"
+               
                 v-bind:src="'/_nuxt' + item.thumb"
-                class="c-sidebar-brand-full img-fluid w-75"
+                class="img-fluid w-75"
               />
             </td>
           </template>
@@ -36,10 +35,15 @@
               {{ item.category.name }}
             </td>
           </template>
+          <template #price="{ item }">
+            <td>
+              {{ formatOriginalPrice(item.price) }}
+            </td>
+          </template>
           <template #method="{ item }">
             <td class="py-2">
               <CButton color="success">
-                <nuxt-link :to="`/project/${item.id}`">
+                <nuxt-link :to="`/product/${item.id}`">
                   <CIcon :content="$options.freeSet.cilPencil" />
                 </nuxt-link>
               </CButton>
@@ -57,6 +61,7 @@
 import axios from "axios";
 import { freeSet } from "@coreui/icons";
 import swal from "sweetalert2";
+import { URL_API } from "~/constant/constant";
 
 const fields = [
   { key: "id", label: "Id" },
@@ -86,6 +91,16 @@ export default {
   },
   methods: {
     /**
+     * format price
+     */
+    formatOriginalPrice(number) {
+      return new Intl.NumberFormat("de-DE", {
+        style: "currency",
+        currency: "VND",
+      }).format(number);
+    },
+
+    /**
      * delete product
      */
     deleteProduct(id) {
@@ -102,7 +117,7 @@ export default {
         .then((result) => {
           if (result.isConfirmed) {
             axios
-              .delete("http://localhost:8000/api/product/" + id)
+              .delete(URL_API +'product/' + id)
               .then((res) => {
                 this.$emit("getListProducts", this.dataProducts);
               });
@@ -122,7 +137,7 @@ export default {
 .card-body {
   position: relative;
 }
-.thumb{
+.thumb {
   width: 100px;
 }
 </style>

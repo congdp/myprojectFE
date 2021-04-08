@@ -35,6 +35,7 @@
   </div>
 </template>
 <script>
+import { URL_API } from "~/constant/constant";
 import axios from "axios";
 import { freeSet } from "@coreui/icons";
 import swal from "sweetalert2";
@@ -78,7 +79,7 @@ export default {
         .then((result) => {
           if (result.isConfirmed) {
             axios
-              .delete("http://localhost:8000/api/category/" + id)
+              .delete(URL_API + 'category/' + id)
               .then((res) => {
                 this.$emit("getListCategory", this.dataCategory);
               });

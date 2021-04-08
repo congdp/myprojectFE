@@ -42,6 +42,7 @@
   </div>
 </template>
 <script>
+import { URL_API} from "~/constant/constant";
 import axios from "axios";
 import swal from "sweetalert2";
 export default {
@@ -56,8 +57,8 @@ export default {
       errors: [],
     };
   },
-  props:{
-    title:"",
+  props: {
+    title: "",
   },
   mounted() {
     if (this.$route.params.id != null) {
@@ -73,28 +74,26 @@ export default {
       if (this.errors.length > 0) {
         return this.errors;
       } else {
-        axios
-          .post("http://localhost:8000/api/category", this.form)
-          .then((res) => {
-            this.$router.push("/category");
-            swal.fire({
-              position: "center",
-              icon: "success",
-              title: "Successfully Added",
-              showConfirmButton: false,
-              timer: 1500,
-            });
+        axios.post(URL_API + 'category', this.form).then((res) => {
+          this.$router.push("/category");
+          swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Successfully Added",
+            showConfirmButton: false,
+            timer: 1500,
           });
+        });
       }
     },
+
     /**
      * get category by id
      */
     getCategoryByID(id) {
-      axios
-        .get("http://localhost:8000/api/category/" + id)
-        .then((res) => (this.form = res.data));
+      axios.get(URL_API + 'category/' + id).then((res) => (this.form = res.data.data));
     },
+
     /**
      * update category
      */
@@ -103,20 +102,19 @@ export default {
       if (this.errors.length > 0) {
         return this.errors;
       } else {
-        axios
-          .put("http://localhost:8000/api/category/" + id, this.form)
-          .then((res) => {
-            this.$router.push("/category");
-            swal.fire({
-              position: "center",
-              icon: "success",
-              title: "Successfully Update",
-              showConfirmButton: false,
-              timer: 1500,
-            });
+        axios.put(URL_API + 'category/' + id, this.form).then((res) => {
+          this.$router.push("/category");
+          swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Successfully Update",
+            showConfirmButton: false,
+            timer: 1500,
           });
+        });
       }
     },
+
     /**
      * check validate
      */
@@ -128,7 +126,6 @@ export default {
       if (this.form.des == "") {
         this.errors.push("Description không được trống");
       }
-     
     },
   },
 };

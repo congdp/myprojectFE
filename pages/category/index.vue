@@ -5,40 +5,43 @@
   </div>
 </template>
 <script>
+import { URL_API } from "~/constant/constant";
 import axios from "axios";
-import Search from "@/components/common/Search"
+import Search from "@/components/common/Search";
 import ListCategory from "~/components/category/ListCategory";
 export default {
   components: {
     ListCategory,
-    Search
+    Search,
   },
   data() {
     return {
       dataCategory: [],
-      search:"",
+      search: "",
     };
   },
   methods: {
     /**
-     * get list blog
+     * get list category
      */
     getData() {
-      axios.get("http://127.0.0.1:8000/api/category").then((res) => {
-        console.log(res.data)
-        this.dataCategory = res.data;
-        // this.page = res.data
-
+      axios.get(URL_API + "category").then((res) => {
+        console.log(res.data);
+        this.dataCategory = res.data.data;
       });
     },
-      getKeyword(value){
+    
+    /**
+     * get key search
+     */
+    getKeyword(value) {
       this.search = value;
-      axios.get("http://localhost:8000/api/category?name="+this.search).then(res => {
-        this.dataCategory = res.data;
+      axios.get(URL_API + "category?name=" + this.search).then((res) => {
+        this.dataCategory = res.data.data;
         console.log(res.data);
         // this.page = res.data;
       });
-    }
+    },
   },
   mounted() {
     this.getData();
