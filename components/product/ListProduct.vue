@@ -43,7 +43,7 @@
                   <CIcon :content="$options.freeSet.cilPencil" />
                 </nuxt-link>
               </CButton>
-              <CButton color="danger" @click="deleteProject(item.id)">
+              <CButton color="danger" @click="deleteProduct(item.id)">
                 <CIcon :content="$options.freeSet.cilTrash" />
               </CButton>
             </td>
@@ -65,6 +65,7 @@ const fields = [
   { key: "category_id", label: "Category" },
   { key: "price", label: "Price" },
   { key: "discount", label: "Discount" },
+  { key: "qty", label: "Amount" },
   { key: "des", label: "Description" },
   { key: "method", label: "Method" },
 ];
@@ -85,9 +86,9 @@ export default {
   },
   methods: {
     /**
-     * delete project
+     * delete product
      */
-    deleteCategory(id) {
+    deleteProduct(id) {
       swal
         .fire({
           title: "Are you sure?",
@@ -101,9 +102,9 @@ export default {
         .then((result) => {
           if (result.isConfirmed) {
             axios
-              .delete("http://localhost:8000/api/projects/" + id)
+              .delete("http://localhost:8000/api/product/" + id)
               .then((res) => {
-                this.$emit("getListProjects", this.dataProjects);
+                this.$emit("getListProducts", this.dataProducts);
               });
             swal.fire("Deleted!", "Your file has been deleted.", "success");
           }

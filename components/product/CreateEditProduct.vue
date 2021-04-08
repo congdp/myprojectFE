@@ -16,7 +16,7 @@
         </CRow>
         <CRow>
           <CCol sm="12">
-            <CInput label="Description" placeholder="Description"  v-model="form.desc">
+            <CInput label="Description" placeholder="Description"  v-model="form.des">
             </CInput>
           </CCol>
         </CRow>
@@ -39,11 +39,11 @@
       <CCardFooter>
         <CButton
         v-if="!this.$route.params.id"
-         color="primary"  @click="createProject()"
+         color="primary"  @click="createProduct()"
         >
           Submit
         </CButton>
-        <CButton v-else color="primary" class="btn-click" @click="updateProject(form.id)" >
+        <CButton v-else color="primary" class="btn-click" @click="updateProduct(form.id)" >
           Update
         </CButton>
 
@@ -55,14 +55,18 @@
 import axios from "axios";
 import swal from "sweetalert2";
 export default {
-  name: "CreateEditProject",
+  name: "CreateEditProduct",
   data() {
     return {
       form: {
         id: "",
         name: "",
-        desc: "",
-        start_date: "",
+        des: "",
+        qty: "",
+        discount: "",
+        price:"",
+        category_id:"",
+        thumb:"",
       },
       errors: [],
     };
@@ -72,20 +76,20 @@ export default {
   },
   mounted() {
     if (this.$route.params.id != null) {
-      this.getProjectByID(this.$route.params.id);
+      this.getProductByID(this.$route.params.id);
     }
   },
   methods: {
     /**
      * create blog
      */
-    createProject() {
+    createProduct() {
       this.validate();
       if (this.errors.length > 0) {
         return this.errors;
       } else {
         axios
-          .post("http://localhost:8000/api/projects", this.form)
+          .post("http://localhost:8000/api/product", this.form)
           .then((res) => {
             this.$router.push("/project");
             swal.fire({
@@ -98,26 +102,28 @@ export default {
           });
       }
     },
+
     /**
-     * get blog by id
+     * get product by id
      */
-    getProjectByID(id) {
+    getProductByID(id) {
       axios
-        .get("http://localhost:8000/api/projects/" + id)
+        .get("http://localhost:8000/api/product/" + id)
         .then((res) => (this.form = res.data));
     },
+
     /**
-     * update blog
+     * update product
      */
-    updateProject(id) {
+    updateProduct(id) {
       this.validate();
       if (this.errors.length > 0) {
         return this.errors;
       } else {
         axios
-          .put("http://localhost:8000/api/projects/" + id, this.form)
+          .put("http://localhost:8000/api/product/" + id, this.form)
           .then((res) => {
-            this.$router.push("/project");
+            this.$router.push("/product");
             swal.fire({
               position: "center",
               icon: "success",
@@ -128,6 +134,7 @@ export default {
           });
       }
     },
+
     /**
      * check validate
      */
@@ -136,11 +143,8 @@ export default {
       if (this.form.name == "") {
         this.errors.push("Name không được trống");
       }
-      if (this.form.desc == "") {
+      if (this.form.des == "") {
         this.errors.push("Description không được trống");
-      }
-      if (this.form.start_date == "") {
-        this.errors.push("Start Date không được trống");
       }
     },
   },

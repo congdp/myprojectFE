@@ -20,16 +20,6 @@
             </CInput>
           </CCol>
         </CRow>
-        <!-- <CRow>
-          <CCol sm="12">
-            <CInput
-              label="Start Date"
-              type="date"
-              v-model="form.start_date"
-            >
-            </CInput>
-          </CCol>
-        </CRow> -->
         <CRow>
           <ul v-if="errors.length > 0" class="alert alert-danger">
           <li v-for="error in errors" :key="error">{{ error }}</li>
@@ -76,7 +66,7 @@ export default {
   },
   methods: {
     /**
-     * create blog
+     * create category
      */
     createCategory() {
       this.validate();
@@ -98,7 +88,7 @@ export default {
       }
     },
     /**
-     * get blog by id
+     * get category by id
      */
     getCategoryByID(id) {
       axios
@@ -106,7 +96,7 @@ export default {
         .then((res) => (this.form = res.data));
     },
     /**
-     * update blog
+     * update category
      */
     updateCategory(id) {
       this.validate();

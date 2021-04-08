@@ -1,7 +1,7 @@
  <template lang="">
   <div>
     <search  @sendKeyword="getKeyword"/>
-    <ListProduct :dataProducts="dataProducts"  @getListProjects="getData"/>
+    <ListProduct :dataProducts="dataProducts"  @getListProducts="getData"/>
   </div>
 </template>
 <script>
@@ -20,8 +20,9 @@ export default {
     };
   },
   methods: {
+    
     /**
-     * get list blog
+     * get list product
      */
     getData() {
       axios.get("http://127.0.0.1:8000/api/product").then((res) => {
@@ -32,8 +33,8 @@ export default {
     },
       getKeyword(value){
       this.search = value;
-      axios.get("http://localhost:8000/api/project?name="+this.search).then(res => {
-        this.dataProjects = res.data;
+      axios.get("http://localhost:8000/api/product?name="+this.search).then(res => {
+        this.dataProducts = res.data;
         console.log(res.data);
         // this.page = res.data;
       });
