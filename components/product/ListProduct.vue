@@ -21,11 +21,10 @@
         >
           <template #thumb="{ item }">
             <td class="thumb">
-              <!-- {{ item.thumb }} -->
-              <!-- <img :src="require(`@/assets/img/logo.png`)" alt=""> -->
+           
               <img
                
-                v-bind:src="'/_nuxt' + item.thumb"
+                v-bind:src="'http://localhost:8000/' + item.thumb"
                 class="img-fluid w-75"
               />
             </td>
@@ -100,6 +99,10 @@ export default {
       }).format(number);
     },
 
+     getImageBlob (image_url) {
+     return axios.get(image_url).then(response => window.URL.createObjectURL(response.data))
+  },
+     
     /**
      * delete product
      */

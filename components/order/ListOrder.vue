@@ -62,11 +62,11 @@
               :duration="collapseDuration"
             >
               <CCard>
-                <CCardHeader> <h6>Order Detail</h6> </CCardHeader>
-                <CCardBody color="dark" class="text-white">
-                  <CRow>
+                <CCardHeader color="dark" > <h6 class="text-white">Order Detail</h6> </CCardHeader>
+                <CCardBody color="secondary" class="text-dark">
+                  <CRow class="fw-bold">
                     <CCol sm="8">
-                      <CRow>
+                      <CRow class="mb-3">
                         <CCol sm="4">
                           Name Buyer : {{ item.customer.name }}
                         </CCol>
@@ -91,11 +91,34 @@
                   </CRow>
 
                   <CDataTable
+                    :items="details"
                     :fields="fields1"
                     :items-per-page="5"
                     pagination
-                    dark
+                    
+                    class="mt-5"
                   >
+                    <template #thumb="{ item }">
+                      <td class="thumb-product">
+                        <img
+                          v-bind:src="
+                            'http://localhost:8000/' + item.product.thumb
+                          "
+                          class="img-fluid w-75"
+                        />
+                      </td>
+                    </template>
+
+                    <template #product="{ item }">
+                      <td>
+                        {{ item.product.name }}
+                      </td>
+                    </template>
+                     <template #price="{ item }">
+                      <td>
+                        {{ formatOriginalPrice( item.product.price) }}
+                      </td>
+                    </template>
                   </CDataTable>
                 </CCardBody>
               </CCard>
@@ -114,8 +137,9 @@ import { DATA_STATUS } from "@/constant/constant";
 import swal from "sweetalert2";
 const fields1 = [
   { key: "id", label: "Id" },
-  { key: "product", label: "Product" },
   { key: "thumb", label: "Thumb" },
+  { key: "product", label: "Product" },
+  { key: "price", label: "Price" },
   { key: "qty", label: "Amount" },
   { key: "sub_total", label: "Sub Total" },
 ];
@@ -213,6 +237,17 @@ export default {
         }
       });
     },
+
+    getOrderDetail() {
+      axios.get(URL_API + "order-detail").then((res) => {
+        this.details = res.data.data;
+        // this.page = res.data
+        console.log(this.details);
+      });
+    },
+  },
+  mounted() {
+    this.getOrderDetail();
   },
 };
 </script>
@@ -224,5 +259,8 @@ export default {
 }
 .card-body {
   position: relative;
+}
+.thumb-product {
+  width: 150px;
 }
 </style>

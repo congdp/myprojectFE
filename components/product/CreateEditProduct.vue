@@ -51,15 +51,21 @@
           </CCol>
         </CRow>
         <CRow>
-          <CCol sm="4">
-             <CInput label="Thumb" type="file" v-model="form.thumb">
-            </CInput>
+          <!-- <CCol sm="4"> -->
+             <!-- <CInputFile label="Thumb" @change="getFile" /> -->
+          <!-- </CCol> -->
+         <CCol sm="4">
+            <label>Thumb</label>
+            <img class= "thumb-preview mb-2" v-bind:src="imagePreview" v-show="showPreview"/>
+            <input type="file" id="file" ref="file"   accept="image/*" v-on:change="handleFileUpload()"/>
           </CCol>
         </CRow>
          <CRow>
-          <ul v-if="errors.length > 0" class="alert alert-danger">
-          <li v-for="error in errors" :key="error">{{ error }}</li>
-         </ul>
+           <CCol sm="4" class= "mt-3">
+             <ul v-if="errors.length > 0" class="alert alert-danger">
+             <li v-for="error in errors" :key="error">{{ error }}</li>
+             </ul>
+          </CCol>
         </CRow>
       </CCardBody>
       <CCardFooter>
@@ -98,6 +104,9 @@ export default {
       },
       errors: [],
       dataCategory: [],
+      showPreview: false,
+      imagePreview: "",
+      // file: "",
     };
   },
   mounted() {
@@ -113,23 +122,60 @@ export default {
     /**
      * create product
      */
-    createProduct() {
-      console.log("OK");
+    async createProduct() {
+      // console.log("OK");
       this.validate();
       if (this.errors.length > 0) {
         return this.errors;
       } else {
-        axios.post(URL_API + "product", this.form).then((res) => {
-          console.log("OK");
-          this.$router.push("/product");
-          swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Successfully Added",
-            showConfirmButton: false,
-            timer: 1500,
-          });
+        // console.log(this.form.thumb.target.files[0]);
+        const data = new FormData();
+        data.append("category_id", this.form.category_id);
+        data.append("name", this.form.name);
+        data.append("des", this.form.des);
+        data.append("price", this.form.price);
+        data.append("discount", this.form.discount);
+        data.append("qty", this.form.qty);
+        data.append("thumb", this.form.thumb);
+        console.log(data.get("thumb"));
+        const res = await axios.post(URL_API + "product", data, {
+          "Content-type": "multipart/form-data",
         });
+
+        swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Successfully Added",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        if (res) {
+          this.$router.push("/product");
+        }
+      }
+    },
+    
+    /**
+     * get thumb upload
+     */
+    handleFileUpload() {
+      this.form.thumb = this.$refs.file.files[0];
+
+      let reader = new FileReader();
+
+      reader.addEventListener(
+        "load",
+        function () {
+          this.showPreview = true;
+          this.imagePreview = reader.result;
+        }.bind(this),
+        false
+      );
+
+      if (this.form.thumb) {
+        if (/\.(jpe?g|png|gif)$/i.test(this.form.thumb.name)) {
+          reader.readAsDataURL(this.form.thumb);
+        }
       }
     },
 
@@ -145,22 +191,36 @@ export default {
     /**
      * update product
      */
-    updateProduct(id) {
+    async updateProduct(id) {
       this.validate();
       if (this.errors.length > 0) {
         return this.errors;
       } else {
-        axios.put(URL_API + "product/" + id, this.form).then((res) => {
-          this.$router.push("/product");
-          swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Successfully Update",
-            showConfirmButton: false,
-            timer: 1500,
-          });
+         const data = new FormData();
+        data.append("category_id", this.form.category_id);
+        data.append("name", this.form.name);
+        data.append("des", this.form.des);
+        data.append("price", this.form.price);
+        data.append("discount", this.form.discount);
+        data.append("qty", this.form.qty);
+        data.append("thumb", this.form.thumb);
+        console.log(data.get("thumb"));
+         const res = await axios.put(URL_API + "product" + id, data, {
+          "Content-type": "multipart/form-data",
         });
+
+        swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Successfully Updated",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        if (res) {
+          this.$router.push("/product");
+        }
       }
+    
     },
 
     /**
@@ -168,11 +228,11 @@ export default {
      */
     validate() {
       this.errors = [];
-      if (this.form.subject == "") {
+      if (this.form.name == "") {
         this.errors.push("Name không được trống");
       }
-      if (this.form.content == "") {
-        this.errors.push("Content không được trống");
+      if (this.form.category_id == "") {
+        this.errors.push("Category không được trống");
       }
     },
 
@@ -188,5 +248,10 @@ export default {
   },
 };
 </script>
-<style lang="">
+<style >
+.thumb-preview {
+  display: block !important;
+  width: 200px;
+  height: 200px;
+}
 </style>
